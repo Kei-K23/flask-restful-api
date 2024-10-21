@@ -1,13 +1,14 @@
 from flask_restful import reqparse, request, Resource
 from models.item import  ItemModel
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from middlewares.auth import jwt_required_middleware
 
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument("name", type=str, required=True, help= "Name filed cannot be empty")
 _user_parser.add_argument("price", type=float, required=True, help= "Price filed cannot be empty")
 
 class ItemById(Resource):
-    @jwt_required()
+    @jwt_required_middleware
     def get(self, item_id):
         item = ItemModel.find_by_id(item_id)
         if not item:
@@ -20,7 +21,7 @@ class ItemById(Resource):
         }, 200
 
 class Item(Resource):
-    @jwt_required()
+    @jwt_required_middleware
     def post(self):
         data = _user_parser.parse_args()
         user_id = get_jwt_identity()
@@ -34,7 +35,7 @@ class Item(Resource):
         
         return {"message" : "Item successfully created."}, 201
     
-    @jwt_required()
+    @jwt_required_middleware
     def get(self):
         name = request.args.get('name')
         items = ItemModel.find_all(name=name)
