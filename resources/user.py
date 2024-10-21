@@ -65,7 +65,7 @@ class AuthCurrentUser(Resource):
         }, 200
 
     @jwt_required_middleware
-    def put(self):
+    def delete(self):
         user_id = get_jwt_identity()
         
         UserModel.delete(id=user_id)
