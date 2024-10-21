@@ -14,6 +14,7 @@ class ItemModel:
         query = "SELECT * FROM items WHERE name=?"
         result = cursor.execute(query, (name,))
         row = result.fetchone()
+        conn.close()
         if row:
             return cls(*row)
     
@@ -24,6 +25,7 @@ class ItemModel:
         query = "SELECT * FROM items WHERE id=?"
         result = cursor.execute(query, (id,))
         row = result.fetchone()
+        conn.close()
         if row:
             return cls(*row)
 
@@ -41,6 +43,7 @@ class ItemModel:
             result = cursor.execute(query)
         
         rows = result.fetchall()
+        conn.close()
         return [cls(*row) for row in rows]
 
     def save_to_db(self):

@@ -14,6 +14,7 @@ class UserModel:
         query = "SELECT * FROM users WHERE username=?"
         result = cursor.execute(query, (username,))
         row = result.fetchone()
+        conn.close()
         if row:
             return cls(*row)
     
@@ -24,8 +25,27 @@ class UserModel:
         query = "SELECT * FROM users WHERE id=?"
         result = cursor.execute(query, (id,))
         row = result.fetchone()
+        conn.close()
         if row:
             return cls(*row)
+        
+    @classmethod
+    def update(cls, id, username):
+        conn = create_connection()
+        cursor = conn.cursor()
+        query = "UPDATE users SET username = ? WHERE id = ?"
+        cursor.execute(query, (username, id,))
+        conn.commit()
+        conn.close()
+    
+    @classmethod
+    def delete(cls, id):
+        conn = create_connection()
+        cursor = conn.cursor()
+        query = "DELETE FROM users WHERE id = ?"
+        cursor.execute(query, (id,))
+        conn.commit()
+        conn.close()
 
     def save_to_db(self):
         conn = create_connection()
