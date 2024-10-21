@@ -1,4 +1,5 @@
 from db import create_connection
+import bcrypt
 
 class UserModel:
     def __init__(self, _id, username ,password):
@@ -29,7 +30,10 @@ class UserModel:
     def save_to_db(self):
         conn = create_connection()
         cursor = conn.cursor()
+        # Hash password
+        hashedPwd = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt())
+        
         query = "INSERT INTO users (username, password) VALUES (?, ?)"
-        cursor.execute(query, (self.username, self.password,))
+        cursor.execute(query, (self.username, hashedPwd,))
         conn.commit()
         conn.close()
