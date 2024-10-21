@@ -15,7 +15,7 @@ class UserRegister(Resource):
         password = data["password"]
         
         if UserModel.find_by_username(username):
-            return {"message": "User is already exist"}, 400
+            return {"error": "User is already exist"}, 400
 
         user = UserModel(None, username, password)
         # Save user to db
@@ -33,7 +33,7 @@ class UserLogin(Resource):
         user = UserModel.find_by_username(username)
         is_valid_pwd = bcrypt.checkpw(password.encode("utf-8"), user.password)
         if not user and not is_valid_pwd:
-            return {"message": "Unauthorized"}, 401
+            return {"error": "Unauthorized"}, 401
         
         access_token = create_access_token(identity=user)
         return {"access_token": access_token}, 200

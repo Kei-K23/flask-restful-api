@@ -28,11 +28,18 @@ class ItemModel:
             return cls(*row)
 
     @classmethod
-    def find_all(cls):
+    def find_all(cls, name):
         conn = create_connection()
         cursor = conn.cursor()
-        query = "SELECT * FROM items"
-        result = cursor.execute(query)
+        
+        if name:
+            query = "SELECT * FROM items WHERE name LIKE ?"
+            # Include the '%' wildcard in the parameter value
+            result = cursor.execute(query, (f"%{name}%",))
+        else:
+            query = "SELECT * FROM items"
+            result = cursor.execute(query)
+        
         rows = result.fetchall()
         return [cls(*row) for row in rows]
 
