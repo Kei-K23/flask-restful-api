@@ -8,3 +8,6 @@ dist/
 htmlcov/
 .tox/
 docs/_build/
+
+*.db
+data.db
