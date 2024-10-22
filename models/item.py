@@ -46,6 +46,24 @@ class ItemModel:
         conn.close()
         return [cls(*row) for row in rows]
 
+    @classmethod
+    def update(cls, name, price, id, user_id):
+        conn = create_connection()
+        cursor = conn.cursor()
+        query = "UPDATE items SET name = ?, price = ? WHERE id = ? AND owner_id = ?"
+        cursor.execute(query, (name, price, id, user_id,))
+        conn.commit()
+        conn.close()
+        
+    @classmethod
+    def delete(cls, id, user_id):
+        conn = create_connection()
+        cursor = conn.cursor()
+        query = "DELETE FROM items WHERE id = ? AND owner_id = ?"
+        cursor.execute(query, (id, user_id,))
+        conn.commit()
+        conn.close()
+    
     def save_to_db(self):
         conn = create_connection()
         cursor = conn.cursor()

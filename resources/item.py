@@ -19,6 +19,23 @@ class ItemById(Resource):
             "price" : item.price,
             "owner_id" : item.owner_id
         }, 200
+    
+    @jwt_required_middleware
+    def put(self, item_id):
+        data = _user_parser.parse_args()
+        user_id = get_jwt_identity()
+        ItemModel.update(data["name"], data["price"],item_id, user_id)
+        return {
+            "message": "Successfully updated the item"
+        }, 200
+    
+    @jwt_required_middleware
+    def delete(self, item_id):
+        user_id = get_jwt_identity()
+        ItemModel.delete(item_id, user_id)
+        return {
+            "message": "Successfully deleted the item"
+        }, 200
 
 class Item(Resource):
     @jwt_required_middleware

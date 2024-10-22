@@ -32,8 +32,12 @@ class UserLogin(Resource):
         password = data["password"]
         
         user = UserModel.find_by_username(username)
+        if not user:
+            return {"error": "Unauthorized"}, 401
+        
         is_valid_pwd = bcrypt.checkpw(password.encode("utf-8"), user.password)
-        if not user and not is_valid_pwd:
+        
+        if not is_valid_pwd:
             return {"error": "Unauthorized"}, 401
         
         access_token = create_access_token(identity=user)
